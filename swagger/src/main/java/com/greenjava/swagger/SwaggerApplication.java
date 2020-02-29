@@ -22,6 +22,7 @@ public class SwaggerApplication {
 		SpringApplication.run(SwaggerApplication.class, args);
 	}
 
+	// To access the swagger http://localhost:8080/swagger-ui.html
 	@Bean
 	public Docket swaggerConfiguration(){
 
