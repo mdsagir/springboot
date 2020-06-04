@@ -1,28 +1,46 @@
 package com.greenjava.validationexception;
 
+import com.greenjava.validationexception.service.DataService;
 import com.greenjava.validationexception.service.HomeService;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class HomeTest {
+@RunWith(SpringRunner.class)
+public class HomeMockTest {
+
+
+    @InjectMocks
+    private HomeService homeService;
+    @Mock
+    DataService dataServiceMock;
+
+    @Before
+    public void before() {
+        homeService.setDataService(dataServiceMock);
+    }
 
     @Test
     public void calculateSum() {
-        HomeService homeService = new HomeService();
-        int actualResult = homeService.calculateSum(new int[]{1, 2, 3});
-        int expectedResult = 6;
-        assertEquals(expectedResult, actualResult);
+
+        Mockito.when(dataServiceMock.getData()).thenReturn(new int[]{1, 2, 3});
+        int actualResult = homeService.calculateSumUsingDataService();
+        assertEquals(6, actualResult);
 
     }
 
     @Test
     public void calculateSumEmpty() {
-        HomeService homeService = new HomeService();
-        int actualResult = homeService.calculateSum(new int[]{});
-        int expectedResult = 0;
-        assertEquals(expectedResult, actualResult);
+
+        Mockito.when(dataServiceMock.getData()).thenReturn(new int[]{0});
+        int actualResult = homeService.calculateSumUsingDataService();
+        assertEquals(0, actualResult);
 
     }
 }
