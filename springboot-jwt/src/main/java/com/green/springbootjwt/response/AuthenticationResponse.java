@@ -1,27 +1,27 @@
 package com.green.springbootjwt.response;
 
 public class AuthenticationResponse {
-    private String jwt;
+    private String accessToken;
 
     public AuthenticationResponse() {
     }
 
-    public AuthenticationResponse(String jwt) {
-        this.jwt = jwt;
+    public AuthenticationResponse(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public String getJwt() {
-        return jwt;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     @Override
     public String toString() {
         return "AuthenticationResponse{" +
-                "jwt='" + jwt + '\'' +
+                "accessToken='" + accessToken + '\'' +
                 '}';
     }
 }

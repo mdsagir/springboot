@@ -1,6 +1,8 @@
 package com.green.springbootjwt.security;
 
+import com.green.springbootjwt.filter.UserLoginAuthenticationFilter;
 import com.green.springbootjwt.filter.UserAuthenticationFilter;
+import com.green.springbootjwt.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,36 +14,52 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 @EnableWebSecurity
 public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
 
 
     private final UserDetailsService userDetailsService;
-    private final UserAuthenticationFilter jwtFilter;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
-    public SpringWebSecurity(@Qualifier("myUserDetailService") UserDetailsService userDetailsService, UserAuthenticationFilter jwtFilter) {
+
+    public SpringWebSecurity(@Qualifier("myUserDetailService") UserDetailsService userDetailsService,
+                             JwtUtil jwtUtil, AuthenticationEntryPoint authenticationEntryPoint) {
         this.userDetailsService = userDetailsService;
-        this.jwtFilter = jwtFilter;
+        this.jwtUtil = jwtUtil;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.userDetailsService);
+    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder.userDetailsService(this.userDetailsService);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
-                .anyRequest().authenticated()
-                .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+
+                .addFilter(new UserLoginAuthenticationFilter(this.jwtUtil, authenticationManagerBean()))
+                .addFilterAfter(new UserAuthenticationFilter(this.userDetailsService, this.jwtUtil), UserLoginAuthenticationFilter.class)
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint);
+
+
     }
 
-    // only for test purpose
+    // TODO only for test purpose
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
@@ -52,4 +70,5 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 }

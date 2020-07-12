@@ -1,12 +1,12 @@
 package com.green.springbootjwt.filter;
 
-import com.green.springbootjwt.service.MyUserDetailService;
 import com.green.springbootjwt.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-@Component
 public class UserAuthenticationFilter extends OncePerRequestFilter {
 
-    private final MyUserDetailService myUserDetailService;
+
+    private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-    public UserAuthenticationFilter(MyUserDetailService myUserDetailService, JwtUtil jwtUtil) {
-        this.myUserDetailService = myUserDetailService;
+    public UserAuthenticationFilter(@Qualifier("myUserDetailService") UserDetailsService userDetailsService, JwtUtil jwtUtil) {
+        this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -39,13 +39,16 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
         if (Objects.nonNull(authorizationHeaders) && authorizationHeaders.startsWith("Bearer ")) {
             jwt = authorizationHeaders.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            username = this.jwtUtil.extractUsername(jwt);
         }
+
         if (Objects.nonNull(username) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
-            UserDetails userDetails = this.myUserDetailService.loadUserByUsername(username);
-            if (jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+            final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+            if (this.jwtUtil.validateToken(jwt, userDetails)) {
+                final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
