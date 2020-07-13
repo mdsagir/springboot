@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -37,11 +38,10 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
 
 
-        if (Objects.nonNull(authorizationHeaders) && authorizationHeaders.startsWith("Bearer ")) {
+        if (Objects.nonNull(authorizationHeaders) && StringUtils.startsWithIgnoreCase(authorizationHeaders, "bearer ")  ) {
             jwt = authorizationHeaders.substring(7);
             username = this.jwtUtil.extractUsername(jwt);
         }
-
         if (Objects.nonNull(username) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
             final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 

@@ -10,4 +10,5 @@ public class SpringbootJwtApplication {
 		SpringApplication.run(SpringbootJwtApplication.class, args);
 	}
 
+	// TODO handle exception SignatureException
 }

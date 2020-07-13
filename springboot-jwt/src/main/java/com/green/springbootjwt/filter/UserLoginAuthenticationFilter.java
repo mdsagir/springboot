@@ -28,7 +28,7 @@ public class UserLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)  {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 
         try {
 
@@ -52,13 +52,20 @@ public class UserLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
         final String token = this.jwtUtil.generateToken(userDetails);
 
         final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-        authenticationResponse.setAccessToken(token);
+        authenticationResponse.setAccess_token(token);
+        authenticationResponse.setToken_type("bearer");
+        authenticationResponse.setRefresh_token(token);
+        authenticationResponse.setExpires_in(3600);
+        authenticationResponse.setScope("create");
 
         final ObjectMapper objectMapper = new ObjectMapper();
         final String string = objectMapper.writeValueAsString(authenticationResponse);
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MediaType.APPLICATION_JSON.toString());
+        response.addHeader("Cache-Control", "no-store");
+        response.addHeader("Pragma", "no-cache");
+
         response.getWriter().write(string);
 
     }
