@@ -4,9 +4,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public interface AppUtils {
 
-    long tokenExpiryTime = 30000L;
+    long tokenExpiryTime = 30000L * 30;
+    String ERROR_PASSWORD_CONFIRM_MISS_MATCH = "Password & confirm password must be same";
+    String ERROR_EMAIL_EXISTS = "Email all ready exists";
 
-    static String generateRefreshToken() {
+     static String generateRefreshToken() {
         StringBuilder refreshToken = new StringBuilder();
 
         String header = RandomStringUtils.randomAlphanumeric(20);

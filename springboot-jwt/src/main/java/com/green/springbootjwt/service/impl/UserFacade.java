@@ -1,4 +1,4 @@
-package com.green.springbootjwt.service;
+package com.green.springbootjwt.service.impl;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

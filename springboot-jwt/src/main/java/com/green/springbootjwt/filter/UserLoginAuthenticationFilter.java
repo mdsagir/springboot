@@ -1,6 +1,8 @@
 package com.green.springbootjwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.green.springbootjwt.entity.User;
+import com.green.springbootjwt.repo.UserRepository;
 import com.green.springbootjwt.request.AuthenticationRequest;
 import com.green.springbootjwt.response.AuthenticationResponse;
 import com.green.springbootjwt.response.ErrorResponse;
@@ -26,10 +28,13 @@ public class UserLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
-    public UserLoginAuthenticationFilter(JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public UserLoginAuthenticationFilter(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        super.setAuthenticationManager(authenticationManager);
         this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -55,12 +60,18 @@ public class UserLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
                                             Authentication authentication) throws IOException {
 
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        final String token = this.jwtUtil.generateToken(userDetails);
+
+        final String token = this.jwtUtil.generateToken(userDetails.getUsername());
+        final String refresh_token = this.userRepository
+                .findByEmail(userDetails.getUsername())
+                .map(User::getRefreshToken).get();
+
 
         final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         authenticationResponse.setAccess_token(token);
         authenticationResponse.setToken_type("bearer");
-        authenticationResponse.setRefresh_token(AppUtils.generateRefreshToken());
+
+        authenticationResponse.setRefresh_token(refresh_token);
         authenticationResponse.setExpires_in(AppUtils.tokenExpiryTime);
         authenticationResponse.setScope("create");
 
@@ -80,7 +91,6 @@ public class UserLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException {
         SecurityContextHolder.clearContext();
-
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setError("invalid_credentials");
         errorResponse.setError_description("Unauthorized Invalid username or password!");
@@ -90,10 +100,5 @@ public class UserLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON.toString());
         response.getWriter().write(string);
-    }
-
-    @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        super.setAuthenticationManager(authenticationManager);
     }
 }

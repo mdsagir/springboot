@@ -17,9 +17,9 @@ public class JwtUtil {
     private final String SECRET_KEY = "secret";
 
 
-    public String generateToken(final UserDetails userDetails) {
+    public String generateToken(final String username) {
         final Map<String, Object> claims = new HashMap<>();
-        return this.createToken(claims, userDetails.getUsername());
+        return this.createToken(claims, username);
     }
 
     private String createToken(final Map<String, Object> claims, final String username) {
@@ -29,9 +29,9 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(final String token, final UserDetails userDetails) {
-        final String userName = extractUsername(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokeExpired(token));
+    public Boolean validateToken(final String token, final String username) {
+        final String extractUsername = extractUsername(token);
+        return (extractUsername.equals(username) && !isTokeExpired(token));
     }
 
     public String extractUsername(final String token) {
