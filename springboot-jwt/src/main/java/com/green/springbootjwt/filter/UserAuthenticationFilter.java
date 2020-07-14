@@ -1,7 +1,11 @@
 package com.green.springbootjwt.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.springbootjwt.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +19,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class UserAuthenticationFilter extends OncePerRequestFilter {
@@ -38,9 +44,16 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
 
 
-        if (Objects.nonNull(authorizationHeaders) && StringUtils.startsWithIgnoreCase(authorizationHeaders, "bearer ")  ) {
+        if (Objects.nonNull(authorizationHeaders) && StringUtils.startsWithIgnoreCase(authorizationHeaders, "bearer ")) {
             jwt = authorizationHeaders.substring(7);
-            username = this.jwtUtil.extractUsername(jwt);
+            try {
+                username = this.jwtUtil.extractUsername(jwt);
+            } catch (ExpiredJwtException e) {
+                expireTokenResponse(response);
+                return;
+
+            }
+
         }
         if (Objects.nonNull(username) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
             final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
@@ -55,5 +68,25 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    public void expireTokenResponse(HttpServletResponse response) {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Map<String, String> errorResponse = new LinkedHashMap<>();
+
+        errorResponse.put("error", "invalid_token");
+        errorResponse.put("error_description", "The access token expired");
+        String responseString;
+        try {
+            responseString = objectMapper.writeValueAsString(errorResponse);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON.toString());
+            response.getWriter().write(responseString);
+            response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

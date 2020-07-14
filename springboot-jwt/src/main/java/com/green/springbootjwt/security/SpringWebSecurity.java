@@ -1,7 +1,7 @@
 package com.green.springbootjwt.security;
 
-import com.green.springbootjwt.filter.UserLoginAuthenticationFilter;
 import com.green.springbootjwt.filter.UserAuthenticationFilter;
+import com.green.springbootjwt.filter.UserLoginAuthenticationFilter;
 import com.green.springbootjwt.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,6 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
     private final JwtUtil jwtUtil;
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
-
     public SpringWebSecurity(@Qualifier("myUserDetailService") UserDetailsService userDetailsService,
                              JwtUtil jwtUtil, AuthenticationEntryPoint authenticationEntryPoint) {
         this.userDetailsService = userDetailsService;
@@ -46,7 +45,8 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
-                .addFilter(new UserLoginAuthenticationFilter(this.jwtUtil, authenticationManagerBean()))
+                //.addFilter(new UserLoginAuthenticationFilter(this.jwtUtil, authenticationManagerBean()))
+                .addFilter(getUserLoginAuthenticationFilter())
                 .addFilterAfter(new UserAuthenticationFilter(this.userDetailsService, this.jwtUtil), UserLoginAuthenticationFilter.class)
                 .authorizeRequests()
                 .anyRequest()
@@ -55,8 +55,6 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
 
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
-
-
     }
 
     // TODO only for test purpose
@@ -65,8 +63,16 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
         return NoOpPasswordEncoder.getInstance();
     }
 
-    @Override
+
     @Bean
+    public UserLoginAuthenticationFilter getUserLoginAuthenticationFilter() throws Exception {
+        final UserLoginAuthenticationFilter filter = new UserLoginAuthenticationFilter(this.jwtUtil, authenticationManagerBean());
+        filter.setFilterProcessesUrl("/api/login");
+        return filter;
+    }
+
+    @Bean
+    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

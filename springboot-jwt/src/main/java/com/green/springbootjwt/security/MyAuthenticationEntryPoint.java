@@ -21,13 +21,14 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException exception) throws IOException {
 
 
+
         final ObjectMapper objectMapper = new ObjectMapper();
         final Map<String, String> errorResponse = new LinkedHashMap<>();
 
         errorResponse.put("message", exception.getMessage());
         String responseString = objectMapper.writeValueAsString(errorResponse);
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON.toString());
         response.getWriter().write(responseString);
 
