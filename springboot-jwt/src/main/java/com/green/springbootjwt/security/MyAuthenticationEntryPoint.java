@@ -1,6 +1,7 @@
 package com.green.springbootjwt.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.green.springbootjwt.response.ErrorResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -9,8 +10,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Component
 public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -20,12 +19,12 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException exception) throws IOException {
 
-
-
         final ObjectMapper objectMapper = new ObjectMapper();
-        final Map<String, String> errorResponse = new LinkedHashMap<>();
 
-        errorResponse.put("message", exception.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setError("unauthorized");
+        errorResponse.setError_description(exception.getMessage());
+
         String responseString = objectMapper.writeValueAsString(errorResponse);
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);

@@ -4,6 +4,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public interface AppUtils {
 
+    long tokenExpiryTime = 30000L;
+
     static String generateRefreshToken() {
         StringBuilder refreshToken = new StringBuilder();
 

@@ -20,7 +20,7 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if (this.userDetailsMap.containsKey(username)) {
+        if (userDetailsMap.containsKey(username)) {
             UserDetails userDetails = userDetailsMap.get(username);
             return new User(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
         }
