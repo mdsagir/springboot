@@ -9,6 +9,4 @@ public class SpringbootJwtApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootJwtApplication.class, args);
 	}
-
-	// TODO handle exception SignatureException
 }

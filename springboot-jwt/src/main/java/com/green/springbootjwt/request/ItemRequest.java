@@ -1,7 +1,10 @@
 package com.green.springbootjwt.request;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ItemRequest {
 
+    @ApiModelProperty(hidden = true)
     private Long id;
     private String name;
     private float price;
