@@ -31,7 +31,7 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.authenticationEntryPoint = authenticationEntryPoint;
-        authenticationFailureHandler = failureHandler;
+        this.authenticationFailureHandler = failureHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
