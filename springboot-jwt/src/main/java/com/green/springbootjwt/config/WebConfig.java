@@ -1,4 +1,4 @@
-package com.green.springbootjwt;
+package com.green.springbootjwt.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

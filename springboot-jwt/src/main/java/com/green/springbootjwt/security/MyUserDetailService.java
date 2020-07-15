@@ -1,6 +1,7 @@
-package com.green.springbootjwt.service.impl;
+package com.green.springbootjwt.security;
 
 import com.green.springbootjwt.repo.UserRepository;
+import com.green.springbootjwt.security.MyUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

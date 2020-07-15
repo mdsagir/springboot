@@ -7,8 +7,10 @@ public interface AppUtils {
     long tokenExpiryTime = 30000L * 30;
     String ERROR_PASSWORD_CONFIRM_MISS_MATCH = "Password & confirm password must be same";
     String ERROR_EMAIL_EXISTS = "Email all ready exists";
+    String TOKEN_TYPE = "Bearer ";
+    String TOKEN_SCOPE = "create";
 
-     static String generateRefreshToken() {
+    static String generateRefreshToken() {
         StringBuilder refreshToken = new StringBuilder();
 
         String header = RandomStringUtils.randomAlphanumeric(20);

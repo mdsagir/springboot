@@ -21,7 +21,7 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         final ObjectMapper objectMapper = new ObjectMapper();
 
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setError("unauthorized");
         errorResponse.setError_description(exception.getMessage());
 

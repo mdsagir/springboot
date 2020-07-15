@@ -1,8 +1,5 @@
 package com.green.springbootjwt.security;
 
-import com.green.springbootjwt.filter.UserAuthenticationFilter;
-import com.green.springbootjwt.filter.UserLoginAuthenticationFilter;
-import com.green.springbootjwt.repo.UserRepository;
 import com.green.springbootjwt.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableWebSecurity
 public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
@@ -24,14 +21,18 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
     private final AuthenticationEntryPoint authenticationEntryPoint;
-    private final UserRepository userRepository;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     public SpringWebSecurity(@Qualifier("myUserDetailService") UserDetailsService userDetailsService,
-                             JwtUtil jwtUtil, AuthenticationEntryPoint authenticationEntryPoint, UserRepository userRepository) {
+                             JwtUtil jwtUtil, AuthenticationEntryPoint authenticationEntryPoint,
+                             AuthenticationFailureHandler failureHandler,
+                             AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.authenticationEntryPoint = authenticationEntryPoint;
-        this.userRepository = userRepository;
+        authenticationFailureHandler = failureHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Override
@@ -63,9 +64,12 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UserLoginAuthenticationFilter getUserLoginAuthenticationFilter() throws Exception {
-        final UserLoginAuthenticationFilter filter = new UserLoginAuthenticationFilter(this.jwtUtil, authenticationManagerBean(), this.userRepository);
-        filter.setFilterProcessesUrl("/api/login");
-        return filter;
+        final UserLoginAuthenticationFilter userLoginAuthenticationFilter = new UserLoginAuthenticationFilter(authenticationManagerBean());
+        userLoginAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        userLoginAuthenticationFilter.setAuthenticationSuccessHandler(this.authenticationSuccessHandler);
+        userLoginAuthenticationFilter.setAuthenticationFailureHandler(this.authenticationFailureHandler);
+        userLoginAuthenticationFilter.setPostOnly(true);
+        return userLoginAuthenticationFilter;
     }
 
     @Bean

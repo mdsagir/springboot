@@ -2,13 +2,16 @@ package com.green.springbootjwt.request;
 
 public class ItemRequest {
 
+    private Long id;
     private String name;
     private float price;
 
     public ItemRequest() {
+
     }
 
-    public ItemRequest(String name, float price) {
+    public ItemRequest(Long id, String name, float price) {
+        this.id = id;
         this.name = name;
         this.price = price;
     }
@@ -29,10 +32,20 @@ public class ItemRequest {
         this.price = price;
     }
 
+    public Long getId() {
+        if (this.id == null) this.id = 0L;
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "ItemRequest{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 '}';
     }

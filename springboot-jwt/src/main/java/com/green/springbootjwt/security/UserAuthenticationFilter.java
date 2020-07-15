@@ -1,7 +1,8 @@
-package com.green.springbootjwt.filter;
+package com.green.springbootjwt.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.springbootjwt.response.ErrorResponse;
+import com.green.springbootjwt.util.AppUtils;
 import com.green.springbootjwt.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,7 +41,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         String jwt = null;
         String username = null;
 
-        if (Objects.nonNull(authorizationHeaders) && StringUtils.startsWithIgnoreCase(authorizationHeaders, "bearer ")) {
+        if (Objects.nonNull(authorizationHeaders) && StringUtils.startsWithIgnoreCase(authorizationHeaders, AppUtils.TOKEN_TYPE)) {
             jwt = authorizationHeaders.substring(7);
             try {
                 username = this.jwtUtil.extractUsername(jwt);
@@ -67,7 +68,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     public void expireTokenResponse(HttpServletResponse response) {
 
         final ObjectMapper objectMapper = new ObjectMapper();
-        final ErrorResponse errorResponse=new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setError("invalid_token");
         errorResponse.setError_description("The access token expired");
 
