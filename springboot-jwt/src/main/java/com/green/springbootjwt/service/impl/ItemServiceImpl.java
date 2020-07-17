@@ -1,7 +1,6 @@
 package com.green.springbootjwt.service.impl;
 
 import com.green.springbootjwt.entity.Item;
-import com.green.springbootjwt.entity.User;
 import com.green.springbootjwt.repo.ItemRepository;
 import com.green.springbootjwt.request.ItemRequest;
 import com.green.springbootjwt.security.CurrentUserDetails;
@@ -27,7 +26,8 @@ public class ItemServiceImpl implements IItemService {
     public ItemRequest createItem(ItemRequest itemRequest) {
 
         final Long userId = this.currentUserDetails.currentUser().getId();
-        ItemRequest itemResult = this.itemRepository.findById(itemRequest.getId())
+
+        return this.itemRepository.findById(itemRequest.getId())
                 .map(item -> {
 
                     item.setName(itemRequest.getName());
@@ -45,7 +45,5 @@ public class ItemServiceImpl implements IItemService {
                     return this.modelMapper.map(save, ItemRequest.class);
 
                 });
-
-        return itemResult;
     }
 }

@@ -55,8 +55,6 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/sign-up").permitAll()
                 .antMatchers("/api/refresh-token").permitAll()
-//                .antMatchers("/swagger-ui.html/**").permitAll()
-//                .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
                 .anyRequest()
                 .authenticated()
 
@@ -65,7 +63,7 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint);
     }
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/v2/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",

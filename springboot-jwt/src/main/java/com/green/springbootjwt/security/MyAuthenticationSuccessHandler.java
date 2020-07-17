@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
 
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -39,7 +38,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         final String refresh_token = this.userRepository
                 .findByEmail(userDetails.getUsername())
                 .map(User::getRefreshToken).get();
-
+        // TODO Customize toke service
 
         final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         authenticationResponse.setAccess_token(token);
