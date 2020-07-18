@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableWebSecurity
-public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
+public class MyWebSecurity extends WebSecurityConfigurerAdapter {
 
 
     private final UserDetailsService userDetailsService;
@@ -25,10 +25,10 @@ public class SpringWebSecurity extends WebSecurityConfigurerAdapter {
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public SpringWebSecurity(@Qualifier("myUserDetailService") UserDetailsService userDetailsService,
-                             JwtUtil jwtUtil, AuthenticationEntryPoint authenticationEntryPoint,
-                             AuthenticationFailureHandler failureHandler,
-                             AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public MyWebSecurity(@Qualifier("myUserDetailService") UserDetailsService userDetailsService,
+                         JwtUtil jwtUtil, AuthenticationEntryPoint authenticationEntryPoint,
+                         AuthenticationFailureHandler failureHandler,
+                         AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.authenticationEntryPoint = authenticationEntryPoint;
