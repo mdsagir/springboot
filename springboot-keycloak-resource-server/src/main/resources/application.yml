@@ -1,0 +1,10 @@
+server:
+  port: 8081
+
+
+security:
+  oauth2:
+    resource:
+      jwk:
+        key-set-uri: http://localhost:8080/auth/realms/master/protocol/openid-connect/certs
+      id: example
