@@ -46,4 +46,12 @@ public class FluxAndMonoBackPressureTest {
             }
         });
     }
+
+    @Test
+    void back_pressure_test() {
+
+        Flux<Integer> integerFlux = Flux.range(1, 10);
+
+
+    }
 }

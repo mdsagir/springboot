@@ -1,6 +1,7 @@
 package com.reactive.exception;
 
 import com.reactive.model.ErrorResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
