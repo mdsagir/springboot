@@ -1,7 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.1'
+	id 'org.springframework.boot' version '2.3.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
+	id 'war'
 }
 
 group = 'com.reactive'
@@ -16,10 +17,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 	implementation 'org.projectlombok:lombok:1.18.16'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	compile group: 'dev.miku', name: 'r2dbc-mysql', version: '0.8.1.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-r2dbc', version: '2.3.4.RELEASE'
+	implementation group: 'com.github.javafaker', name: 'javafaker', version: '1.0.2'
+
+
 }
 
 test {

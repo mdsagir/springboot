@@ -4,3 +4,14 @@ spring:
       host: localhost
       port: 27017
       database: mydb
+  r2dbc:
+    url: r2dbcs:mysql://34.123.64.20:3306/MintgenieV2
+    username: root
+    password: b#Ar@Tm@taKEYj@!
+    pool:
+      initial-size: 10
+      max-size: 30
+      max-idle-time: 15s
+      validation-query: SELECT 1
+server:
+  port: 8081

@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
+import java.util.Comparator;
 
 public class FluxAndMonErrorTest {
 
@@ -57,8 +58,9 @@ public class FluxAndMonErrorTest {
         Flux<String> stringFlux = Flux.just("A", "B", "C", "D")
                 .concatWith(Flux.error(new RuntimeException("Exception occurred")))
                 .concatWith(Flux.just("E"))
-                .onErrorMap(e -> new CustomException(e))
+                .onErrorMap(CustomException::new)
                 .retry(2);
+
 
         StepVerifier.create(stringFlux.log())
                 .expectNext("A", "B", "C", "D")
