@@ -5,9 +5,9 @@ spring:
       port: 27017
       database: mydb
   r2dbc:
-    url: r2dbcs:mysql://34.123.64.20:3306/MintgenieV2
+    url: r2dbcs:mysql://localhost:3306/test
     username: root
-    password: b#Ar@Tm@taKEYj@!
+    password: password
     pool:
       initial-size: 10
       max-size: 30
