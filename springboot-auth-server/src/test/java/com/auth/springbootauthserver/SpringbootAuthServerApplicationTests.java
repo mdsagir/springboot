@@ -1,4 +1,4 @@
-package com.greenjava.springbootauthserver;
+package com.auth.springbootauthserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,7 +8,6 @@ class SpringbootAuthServerApplicationTests {
 
 	@Test
 	void contextLoads() {
-
 	}
 
 }
