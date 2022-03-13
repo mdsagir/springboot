@@ -4,7 +4,6 @@ import com.greenjava.springbootauthserver.entity.Client;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.ClientDetails;
-
 import java.util.*;
 
 public class MyClientDetails implements ClientDetails {
