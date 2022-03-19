@@ -1,4 +1,10 @@
 com/reactive/HandleOperator.java
  com.reactive.HandleOperator
+ com.reactive.HandleOperator$Department
  com.reactive.HandleOperator$Employee
- com.reactive.HandleOperator$Employee$Department
+com/reactive/TransformOperator.java
+ com.reactive.TransformOperator
+com/reactive/CombineLatestOperator.java
+ com.reactive.CombineLatestOperator
+com/reactive/ZipOperator.java
+ com.reactive.ZipOperator

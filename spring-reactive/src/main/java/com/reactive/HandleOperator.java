@@ -1,10 +1,10 @@
 package com.reactive;
 
-import lombok.Data;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,7 +18,7 @@ public class HandleOperator {
                 synchronousSink.next(integer);
             }
         }).cast(Integer.class);
-         even.subscribe(System.out::println);
+        even.subscribe(System.out::println);
 
         final Flux<String> stringFlux = range.handle((integer, synchronousSink) -> {
             if (integer % 2 == 0) {
@@ -27,18 +27,27 @@ public class HandleOperator {
         }).cast(String.class);
         stringFlux.subscribe(System.out::println);
 
-        final List<Employee.Department> departments = IntStream.range(1, 100).mapToObj(Employee.Department::new).collect(Collectors.toList());
+        final List<Department> departments = IntStream.range(1, 100).mapToObj(Department::new).collect(Collectors.toList());
         final Employee employee = new Employee("sagir");
         employee.setDepartments(departments);
         final Flux<Employee> employeeFlux = Flux.just(employee);
         final Flux<Employee> employeeFlux1 = employeeFlux.handle((employee1, synchronousSink) -> {
-            final List<Employee.Department> departments1 = employee1.getDepartments();
+            final List<Department> departments1 = employee1.getDepartments();
             departments1.forEach(department -> {
                 department.setDepartmentName(UUID.randomUUID().toString().substring(1, 5));
             });
             synchronousSink.next(employee1);
         }).cast(Employee.class);
         employeeFlux1.subscribe(System.out::println);
+
+        Function<Flux<Department>, Flux<Department>> applyFunction = departmentFlux -> departmentFlux.map(department -> {
+            department.setDepartmentName(UUID.randomUUID().toString().substring(1, 5).toUpperCase());
+            return department;
+        });
+        final Flux<Department> departmentFlux = Flux.fromIterable(departments).transform(applyFunction);
+        departmentFlux.subscribe(System.out::println);
+
+
     }
 
 
@@ -68,45 +77,45 @@ public class HandleOperator {
         private List<Department> departments;
 
 
-        static class Department {
-
-            private Integer id;
-            public String departmentName;
-
-            public Department(Integer id) {
-                this.id = id;
-            }
-
-            public Integer getId() {
-                return id;
-            }
-
-            public void setId(Integer id) {
-                this.id = id;
-            }
-
-            public String getDepartmentName() {
-                return departmentName;
-            }
-
-            public void setDepartmentName(String departmentName) {
-                this.departmentName = departmentName;
-            }
-
-            @Override
-            public String toString() {
-                return "Department{" +
-                        "id=" + id +
-                        ", departmentName='" + departmentName + '\'' +
-                        '}';
-            }
-        }
-
         @Override
         public String toString() {
             return "Employee{" +
                     "name='" + name + '\'' +
                     ", departments=" + departments +
+                    '}';
+        }
+    }
+
+    static class Department {
+
+        private Integer id;
+        public String departmentName;
+
+        public Department(Integer id) {
+            this.id = id;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getDepartmentName() {
+            return departmentName;
+        }
+
+        public void setDepartmentName(String departmentName) {
+            this.departmentName = departmentName;
+        }
+
+        @Override
+        public String toString() {
+            return "Department{" +
+                    "id=" + id +
+                    ", departmentName='" + departmentName + '\'' +
                     '}';
         }
     }
