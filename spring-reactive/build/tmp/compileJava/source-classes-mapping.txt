@@ -1,2 +1,4 @@
 com/reactive/HandleOperator.java
  com.reactive.HandleOperator
+ com.reactive.HandleOperator$Employee
+ com.reactive.HandleOperator$Employee$Department
