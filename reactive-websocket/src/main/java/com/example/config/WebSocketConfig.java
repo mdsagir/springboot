@@ -24,10 +24,6 @@ public class WebSocketConfig {
     public WebSocketHandlerAdapter webSocketHandlerAdapter() {
         return new WebSocketHandlerAdapter();
     }
-    @Bean
-    public WebSocketService webSocketService(RequestUpgradeStrategy upgradeStrategy) {
-        return new HandshakeWebSocketService(upgradeStrategy);
-    }
 
     @Bean
     public Sinks.Many<String> sink() {
