@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "user",
+      "type": "com.docker.config.User",
+      "sourceType": "com.docker.config.User"
+    }
+  ],
+  "properties": [
+    {
+      "name": "user.message",
+      "type": "java.lang.String",
+      "description": "This user Welcome message",
+      "sourceType": "com.docker.config.User"
+    }
+  ],
+  "hints": []
+}
