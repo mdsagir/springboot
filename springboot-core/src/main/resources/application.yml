@@ -1,0 +1,20 @@
+spring:
+  main:
+    web-application-type: none
+
+
+userinfo:
+  name: John
+  address:
+    - Mumbai
+    - Patna
+    - New Delhi
+  mobile: [ 905282323,23232423 ]
+  bio: |
+    Hey There ! Her I am available 
+    24*7, where are you
+    I am since waiting eagerly
+  message: >
+    This is 
+    very 
+    personal message
