@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  springboot-service:
+    image: sagiransari/spring-boot-docker:latest
+    container_name: spring-boot-container
+    ports:
+      - "8080:8080"
