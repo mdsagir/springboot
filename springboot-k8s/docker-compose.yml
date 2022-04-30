@@ -1,0 +1,9 @@
+version: "3.0"
+services:
+  springboot:
+    image: springboot-k8s
+    container_name: springboot-k8s
+    ports:
+      - "8080:8080"
+    environment:
+      - WELCOME_MESSAGE=Welcome to SpringBoot Docker!

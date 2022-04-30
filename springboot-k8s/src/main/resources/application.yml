@@ -1,0 +1,7 @@
+welcome:
+  message: Welcome to SpringBoot!
+server:
+  shutdown: graceful
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
